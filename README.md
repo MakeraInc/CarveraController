@@ -47,7 +47,8 @@ If everything is done correctly, then the drivers will be installed and now you 
 ![APP Damage](/img/APP-Damage-Error.png)
 
 If you encounter the warning as above, open the terminal window and execute the command below:
-sudo xattr -r -d com.apple.quarantine /Applications/CarveraController.app
+
+**sudo xattr -r -d com.apple.quarantine /Applications/CarveraController.app**
 
 ![APP Damage Solution](/img/APP-Damage-solution.png)
 
