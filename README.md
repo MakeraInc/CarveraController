@@ -23,11 +23,13 @@ That's it! Locate the Carvera Controller icon to launch the program
 After connecting the USB into your computer. Then open the device manager and under the **Other devices** tab you should see it as **FTDI 232R UART**. If it shows up there correctly then follow the steps from **"STEP 1"**. And if it shows up as **USB Serial Port**. In that case simply follow the steps from **"STEP 2"**.
 
 **Step 1: Installing First Set of USB drivers**
+
 ![USB Driver Setup1](/img/USB-Driver-Setup-1.png)
 
 Firstly, Open the device manager, right click on the FTDI and click on **Update drivers**. Then click on **Browse My computer for drivers** and then just select the driver Folder where you downloaded the drivers. And then hit ok, make sure **Include Subfolder** is ticked. And now click on **Next** and it will install first set of drivers
 
 **Step 2: Installing Second Set of USB drivers**
+
 ![USB Driver Setup2](/img/USB-Driver-Setup-2.png)
 
 This time it will show up as **USB Serial Port** under **other devices**. So now again right click on it and **select update drivers**. Then again click on **Browse My computer for drivers**. And then just select the driver Folder and hit ok again, make sure **Include Subfolder** is ticked. And now click on **Next** and it will install the second set of drivers. Which is same process as first one. 
