@@ -38,10 +38,9 @@ If everything is done correctly, then the drivers will be installed and now you 
 ![Mac OS Setup](/img/Mac-Setup.png)
 
 1. Double-click the dmg file to mount it 
-3. Double-click the LightBurn.dmg file to mount it
-4. Drag the CarveraController application into your applications folder
-5. Launch CarveraController from the launcher as normal
-6. You can now eject the DMG file (drag it to the trash bin)
+2. Drag the CarveraController application into your applications folder
+3. Launch CarveraController from the launcher as normal
+4. You can now eject the DMG file (drag it to the trash bin)
 
 ### Solution for APP damage error
 ![APP Damage](/img/APP-Damage-Error.png)
