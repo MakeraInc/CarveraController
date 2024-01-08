@@ -52,7 +52,9 @@ If you encounter the warning as above, open the terminal window and execute the 
 **sudo xattr -r -d com.apple.quarantine /Applications/CarveraController.app**
 
 If you experience a crash, please execute the following command:
+
 **open /Applications/CarveraController.app/Contents/MacOS/carvera**
+
 After this, you can directly open it next time.
 
 ![APP Damage Solution](/img/APP-Damage-solution.png)
