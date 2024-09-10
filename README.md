@@ -37,10 +37,10 @@ This time it will show up as **USB Serial Port** under **other devices**. So now
 If everything is done correctly, then the drivers will be installed and now you can use your USB without any problem.
 
 ## Mac/OSX Installation
-![Mac OS Setup](/img/Mac-Setup.png)
+![Mac OS Setup](/img/Mac-Setup2.png)
 
 1. Double-click the dmg file to mount it 
-2. Drag the CarveraController application into your applications folder
+2. Drag the CarveraController.app into Applications folder
 3. Launch CarveraController from the launcher as normal
 4. You can now eject the DMG file (drag it to the trash bin)
 
