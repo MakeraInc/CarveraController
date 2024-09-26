@@ -1,6 +1,17 @@
 Notice: 
 To let the Carvera work perfectly, please make sure both your controller software and firmware are up to date. For controller software, just download the according version of the package and reinstall.
 
+[0.9.8]
+1. Optimizing: File transfer adopts compressed file format，Improve file transfer speed
+2. Optimizing: Optimize the stability and reliability of the connection between the Controller and the machine
+3. Optimizing: Add the function of quickly setting the current coordinates of X/Y/Z/A under the X/Y/Z/A buttons on the main interface, and add the function of quickly moving the A-axis to a certain angle.
+4. Optimizing: Add the function of "If the probe or tool setter has been triggered before tool calibration, an alarm window will pop up"
+5. Optimizing: Optimizing:Add Main Button long press function selection in the configuration page。
+6. Optimizing:Modify the automatic dust collection function to be disabled by default, and you can choose whether to enable automatic dust collection on the "Configure and Run" page
+7. Bug fixing:Fix the bug of incomplete text display in the text input box on the Windows platform
+8. Bug fixing:Resolve the issue of program crashes when displaying graphics on certain devices on the Android platform
+9. Bug fixing:Fix bug on Android platform where buttons cannot be operated during the first run after APK installation
+
 [0.9.6]
 1、Bug fixing：4th axis position is not accurate after large-angle continuous rotation.
 2、Bug fixing：4th axis rotation direction is reversed, should follow the right-hand rule (Please check if you manually changed the post processor for the previous false, need to restore that after the upgrade).
