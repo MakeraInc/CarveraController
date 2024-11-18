@@ -1,6 +1,11 @@
 Notice: 
 To let the Carvera work perfectly, please make sure both your controller software and firmware are up to date. For controller software, just download the according version of the package and reinstall.
 
+[ 0.9.9]
+1. Optimizing: Controller compatible with Carvera and Carvera Air
+2. Optimizing: Add recent connection button, click to quickly connect to the machine
+3. Optimizing: Optimize the stability and reliability of the connection between the Controller and the machine
+
 [0.9.8]
 1. Optimizing: File transfer adopts compressed file format，Improve file transfer speed
 2. Optimizing: Optimize the stability and reliability of the connection between the Controller and the machine
