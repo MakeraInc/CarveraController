@@ -70,5 +70,13 @@ After this, you can directly open it next time.
 4. Allow time for the app to install.
 5. Tap Done or Open once the installation is complete.
 
-
+## Linux Installation
+1. Extract the carvera controller-0.9.9-x86_64-linux.tar.xz file to /path/yourApp
+2. you can execute it by double clicking the "CarveraController" file or by executing "sudo ./CarveraController" on the terminal
+3. When you are ready to connect the machine via USB, by executing "sudo ./CarveraController" on the terminal
+4. (On centos system):CentOS typically uses firewalld as the firewall management tool.
+   You can follow these steps to allow access to UDP port 3333:
+   ```bash
+   sudo firewall-cmd --zone=public --add-port=3333/udp --permanent
+   sudo firewall-cmd --reload
 
