@@ -1,6 +1,14 @@
 Notice: 
 To let the Carvera work perfectly, please make sure both your controller software and firmware are up to date. For controller software, just download the according version of the package and reinstall.
 
+[0.9.10]
+Optimizing: GCode code supporting imperial units (the units on the controller interface are still millimeters and will be automatically converted based on whether the units in the machine are imperial)
+Optimizing:Optimize the display of 4-axis work origin and tool alignment points in the "Config and Run" dialog box.
+Optimizing: The 'Recent connect' button has been optimized to automatically search for a new IP based on the machine name when the IP is changed.
+Optimizing: Add automatic reconnection function, when the connection between the Controller and the machine is disconnected or the machine is reset, the Controller will automatically reconnect after 10 seconds.
+Fixed the issue of displaying a red dot when right clicking on Controller (on Windows 11 or Linux ).
+NOTE: To ensure the compatibility of firmware and controller, it is recommended to upgrade both firmware and Controller.
+
 [0.9.9]
 1. Optimizing: Controller compatible with Carvera and Carvera Air
 2. Optimizing: Add recent connection button, click to quickly connect to the machine
