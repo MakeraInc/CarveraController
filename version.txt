@@ -1,6 +1,13 @@
 Notice: 
 To let the Carvera work perfectly, please make sure both your controller software and firmware are up to date. For controller software, just download the according version of the package and reinstall.
 
+[0.9.11]
+1. Optimizing: Enabled the upgrade button on the taskbar to be clickable even when the machine is not connected or in an idle state.
+2. Optimizing: Added Tooltip functionality to buttons.
+3. Optimizing: Added support for German, Spanish, French, Italian, Portuguese, Traditional Chinese, Korean, and Japanese languages.
+4. Optimizing: Introduced an iOS version of the controller (search for 'MakeraController' on the App Store to download).
+5. Optimizing: Added a prompt that appears when performing tool calibration, tool change, or Z-probe if the machine has not been homed: "Machine has not been homed, Please home first!"
+
 [0.9.10]
 1. Optimizing: GCode code supporting imperial units (the units on the controller interface are still millimeters and will be automatically converted based on whether the units in the machine are imperial)
 2. Optimizing:Optimize the display of 4-axis work origin and tool alignment points in the "Config and Run" dialog box.
