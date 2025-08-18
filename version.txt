@@ -1,6 +1,14 @@
 Notice: 
 To let the Carvera work perfectly, please make sure both your controller software and firmware are up to date. For controller software, just download the according version of the package and reinstall.
 
+[0.9.12]
+1.​​Bug Fix​​: Fixed a crash issue when clicking "Confirm" with an empty input field in the Controller.
+2.​​Bug Fix​​: Fixed abnormal display issues in toolpath preview.
+3.​​Optimization​​: Enhanced firmware-Controller communication for improved file transfer reliability.
+4.​​Optimization​​: Added a check for spindle rotation before resuming paused machining. If not rotating, a confirmation dialog will prompt whether to proceed.
+5.​​Optimization​​: Added Wi-Fi signal strength (RSSI) between the machine’s Wi-Fi module and the router on the diagnostics page.ad and open the files. Users can then directly click the "Run" button to proceed with processing in the next step.
+6.Optimization​​: Added a toggle button for enabling/disabling ​​'Auto Extout'​​ in the ​​'Config and Run'​​ dialog.
+
 [0.9.11]
 1. Optimizing: Enabled the upgrade button on the taskbar to be clickable even when the machine is not connected or in an idle state.
 2. Optimizing: Added Tooltip functionality to buttons.
