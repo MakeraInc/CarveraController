@@ -1,0 +1,1268 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-03-15 14:40+0800\n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Language: zh_TW\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 3.3.2\n"
+
+#: makera.py:182
+msgid "Halt Manually"
+msgstr "手動觸發"
+
+#: makera.py:183
+msgid "Home Fail"
+msgstr "歸零失敗"
+
+#: makera.py:184
+msgid "Probe Fail"
+msgstr "對刀失敗"
+
+#: makera.py:185
+msgid "Calibrate Fail"
+msgstr "校準失敗"
+
+#: makera.py:186
+msgid "ATC Home Fail"
+msgstr "自動換刀歸零失敗"
+
+#: makera.py:187
+msgid "ATC Invalid Tool Number"
+msgstr "自動換刀刀具不正確"
+
+#: makera.py:188
+msgid "ATC Drop Tool Fail"
+msgstr "自動換刀釋放失敗"
+
+#: makera.py:189
+msgid "ATC Position Occupied"
+msgstr "自動換刀位置被佔用"
+
+#: makera.py:190
+msgid "Spindle Overheated"
+msgstr "主軸過熱"
+
+#: makera.py:190
+msgid "Power Overheated"
+msgstr "電源過熱"
+
+#: makera.py:191
+msgid "Soft Limit Triggered"
+msgstr "軟限位觸發"
+
+#: makera.py:192
+msgid "Cover opened when playing"
+msgstr "運行期間上蓋被打開"
+
+#: makera.py:193
+msgid "Wireless probe dead or not set"
+msgstr "探針失效"
+
+#: makera.py:194
+msgid "Emergency stop button pressed"
+msgstr "急停開關被按下"
+
+#: makera.py:196
+msgid "Hard Limit Triggered, reset needed"
+msgstr "限位開關觸發, 需要重啟"
+
+#: makera.py:197
+msgid "X Axis Motor Error, reset needed"
+msgstr "X軸馬達報錯，需要重啟"
+
+#: makera.py:198
+msgid "Y Axis Motor Error, reset needed"
+msgstr "Y軸馬達報錯,需要重啟"
+
+#: makera.py:199
+msgid "Z Axis Motor Error, reset needed"
+msgstr "Z軸馬達報錯,需要重啟"
+
+#: makera.py:200
+msgid "Spindle Stall, reset needed"
+msgstr "主軸停轉,需要重啟"
+
+#: makera.py:201
+msgid "SD card read fail, reset needed"
+msgstr "SD卡讀取異常,需要重啟"
+
+#: makera.py:203
+msgid "Spindle Alarm, power off/on needed"
+msgstr "主軸報警,需要重新上電"
+
+#: makera.py:318
+msgid "Press the Wireless Probe until the green LED blinks quickly."
+msgstr "長按無線探針直至綠色LED燈開始閃爍。"
+
+#: makera.py:319
+msgid "Pairing Success!"
+msgstr "配對成功！"
+
+#: makera.py:320
+msgid "Pairing Timeout!"
+msgstr "配對超時！"
+
+#: makera.py:471
+msgid "from Headstock"
+msgstr "從主軸箱"
+
+#: makera.py:477
+msgid "from Anchor2"
+msgstr "相對錨點2"
+
+#: makera.py:479
+msgid "from Anchor1"
+msgstr "相對錨點1"
+
+#: makera.py:484
+msgid "Fixed Pos"
+msgstr "固定位置"
+
+#: makera.py:486
+msgid "from"
+msgstr "從"
+
+msgid "Clearance"
+msgstr "净空区"
+
+#: makera.py:487 makera.kv:1391
+msgid "Work Origin"
+msgstr "工作原點"
+
+#: makera.py:487 makera.kv:1397
+msgid "Path Origin"
+msgstr "刀路原點"
+
+#: makera.py:490
+msgid "X Points: "
+msgstr "X探點: "
+
+#: makera.py:491
+msgid "Y Points: "
+msgstr "Y探點: "
+
+#: makera.py:492
+msgid "Height: "
+msgstr "高度: "
+
+#: makera.py:1375 makera.py:1402
+msgid " New version detected: v"
+msgstr " 偵測到新版本: v"
+
+#: makera.py:1375 makera.py:1402
+msgid " Current: v"
+msgstr " 當前版本: v"
+
+#: makera.py:1378 makera.py:1405
+msgid " Current version: v"
+msgstr " 當前版本: v"
+
+#: makera.py:1522
+msgid "Timeout, Connection lost!"
+msgstr "超時,連接斷開！"
+
+#: makera.py:1548
+msgid "Documents"
+msgstr "文件"
+
+#: makera.py:1550
+msgid "Downloads"
+msgstr "下載"
+
+#: makera.py:1552
+msgid "Desktop"
+msgstr "桌面"
+
+#: makera.py:1563
+msgid "Storage"
+msgstr "本地存儲"
+
+#: makera.py:1613 makera.py:1657
+msgid "Recent Places"
+msgstr "最近訪問"
+
+#: makera.py:1670
+msgid "Searching nearby machines..."
+msgstr "搜尋附近機器…"
+
+#: makera.py:1680
+msgid "Not found, enter IP manually..."
+msgstr "未找到機器, 手動輸入IP…"
+
+#: makera.py:1694
+msgid "Input IP address:"
+msgstr "輸入IP地址:"
+
+#: makera.py:1766
+msgid "Error loading dir"
+msgstr "加載目錄失敗"
+
+#: makera.py:1768
+msgid "Timeout loading dir"
+msgstr "加載目錄超時"
+
+#: makera.py:1776
+msgid "Error deleting"
+msgstr "刪除失敗"
+
+#: makera.py:1778
+msgid "Timeout deleting"
+msgstr "刪除超時"
+
+#: makera.py:1786
+msgid "Error renaming"
+msgstr "重命名失敗"
+
+#: makera.py:1788
+msgid "Timeout renaming"
+msgstr "重命名超時"
+
+#: makera.py:1796
+msgid "Error making dir:"
+msgstr "創建目錄失敗:"
+
+#: makera.py:1798
+msgid "Timeout making dir:"
+msgstr "創建目錄超時:"
+
+#: makera.py:1806
+msgid "Error getting WiFi info!"
+msgstr "取得WiFi資訊失敗！"
+
+#: makera.py:1808
+msgid "Timeout getting WiFi info!"
+msgstr "取得WiFi資訊超時！"
+
+#: makera.py:1818
+msgid "Timeout connecting WiFi!"
+msgstr "連接WiFi超時！"
+
+#: makera.py:1828
+msgid "Delete File or Dir"
+msgstr "刪除檔案或目錄"
+
+#: makera.py:1829
+msgid "Confirm to delete file or dir"
+msgstr "確認刪除檔案或目錄"
+
+#: makera.py:1839
+msgid "Machine Is Halted: "
+msgstr "機器告警: "
+
+#: makera.py:1841
+msgid "Machine Is Halted!"
+msgstr "機器告警！"
+
+#: makera.py:1844
+msgid "Please manually switch off/on the machine!"
+msgstr "請手動關/開總電源開關！"
+
+#: makera.py:1847 makera.py:1859
+msgid "Confirm to reset machine?"
+msgstr "確認重啟機器？"
+
+#: makera.py:1850
+msgid "Confirm to unlock machine?"
+msgstr "確認解鎖機器？"
+
+#: makera.py:1858
+msgid "Machine Is Sleeping"
+msgstr "機器休眠中"
+
+#: makera.py:1873
+msgid "Change name"
+msgstr "修改名稱"
+
+#: makera.py:1881
+msgid "Input new folder name:"
+msgstr "請輸入新的目錄名:"
+
+#: makera.py:1889
+msgid "Input WiFi password of"
+msgstr "請輸入WiFi密碼"
+
+#: makera.py:1901
+msgid "File Already Exists"
+msgstr "文件已存在"
+
+#: makera.py:1902
+msgid "Confirm to overwrite file:"
+msgstr "確認覆蓋文件:"
+
+#: makera.py:1909
+msgid "Updating Firmware"
+msgstr "更新固件"
+
+#: makera.py:1910
+msgid "Reset the machine when uploading is complete."
+msgstr "更新結束後自動重啟機器。"
+
+#: makera.py:1927
+msgid "Openning local file"
+msgstr "打開本地文件"
+
+#: makera.py:1989
+msgid "Download config file error"
+msgstr "下載配置文件失敗"
+
+#: makera.py:2004
+msgid "Load config..."
+msgstr "加載配置…"
+
+#: makera.py:2004
+msgid "Checking"
+msgstr "檢查中"
+
+#: makera.py:2030
+msgid "Download config file error!"
+msgstr "下載配置文件失敗！"
+
+#: makera.py:2032
+msgid "Download file error!"
+msgstr "下載文件失敗！"
+
+#: makera.py:2046
+msgid "Synchronize version and time..."
+msgstr "同步版本與時間…"
+
+#: makera.py:2051
+msgid "Open cached file"
+msgstr "打開緩存文件"
+
+#: makera.py:2061
+msgid "Downloading is canceled manually."
+msgstr "下載被取消。"
+
+#: makera.py:2071
+msgid "Downloading"
+msgstr "下載中"
+
+#: makera.py:2085 makera.py:2087
+msgid "WiFi: Searching for network..."
+msgstr "WiFi:查找網絡…"
+
+#: makera.py:2112
+msgid "WiFi: Connected"
+msgstr "WiFi:已連接"
+
+#: makera.py:2112
+msgid "WiFi: Not Connected"
+msgstr "WiFi: 未連接"
+
+#: makera.py:2115
+msgid "Close Connection"
+msgstr "斷開連接"
+
+#: makera.py:2156
+msgid "Can not load coordinate value:"
+msgstr "無法獲取坐標值:"
+
+#: makera.py:2163
+msgid "Can not load laser offset value:"
+msgstr "無法獲取激光偏移:"
+
+#: makera.py:2224
+msgid "Connecting to"
+msgstr "正在連接"
+
+#: makera.py:2247
+msgid "Uploading"
+msgstr "正在上傳"
+
+#: makera.py:2268
+msgid "Uploading is canceled manually."
+msgstr "上傳被取消。"
+
+#: makera.py:2271
+msgid "Upload file error!"
+msgstr "上傳文件錯誤！"
+
+#: makera.py:2290
+msgid "Update Finished"
+msgstr "更新完成"
+
+#: makera.py:2291
+msgid "Confirm to reset the machine?"
+msgstr "確認重啟機器？"
+
+#: makera.py:2405 makera.kv:2911
+msgid "disconnect"
+msgstr "斷開連接"
+
+#: makera.py:2533 makera.kv:2730
+msgid "Laser"
+msgstr "激光"
+
+#: makera.py:2540
+msgid "None"
+msgstr "空"
+
+#: makera.py:2550 makera.kv:2781
+msgid "Probe"
+msgstr "探針"
+
+#: makera.py:2625
+msgid " No Remote File Selected"
+msgstr " 沒有遠程文件被選中"
+
+#: makera.py:2901 makera.py:2912
+msgid "Load config error, Key:"
+msgstr "加載配置失敗,Key:"
+
+#: makera.py:2982
+msgid "Settings applied, need reset to take effect !"
+msgstr "配置已更新, 需要重啟生效！"
+
+#: makera.py:2987
+msgid "Restore Settings"
+msgstr "恢復出廠設置"
+
+#: makera.py:2988
+msgid "Confirm to restore settings from default ?"
+msgstr "確認恢復出廠設置？"
+
+#: makera.py:2999
+msgid "Save As Default"
+msgstr "保存為出廠設置"
+
+#: makera.py:3000
+msgid "Confirm to save current settings as default ?"
+msgstr "確認保存當前配置為出廠值？"
+
+#: makera.py:3217
+msgid "Openning file error:"
+msgstr "打開文件失敗:"
+
+#: makera.py:3217
+msgid "Please make sure the GCode file is valid"
+msgstr "請確保G代碼文件有效"
+
+#: makera.py:3299
+msgid "Carvera Controller"
+msgstr "Carvera控制器"
+
+#: makera.kv:312
+msgid "Set X Origin"
+msgstr "設置X原點"
+
+#: makera.kv:314
+msgid "X = 0"
+msgstr ""
+
+#: makera.kv:323
+msgid "Set X"
+msgstr ""
+
+#: makera.kv:340
+msgid "Set Y Origin"
+msgstr "設置Y原點"
+
+#: makera.kv:342
+msgid "Y = 0"
+msgstr ""
+
+#: makera.kv:351
+msgid "Set Y"
+msgstr ""
+
+#: makera.kv:369
+msgid "Set Z Origin"
+msgstr "設置Z原點"
+
+#: makera.kv:371
+msgid "Z = 0"
+msgstr ""
+
+#: makera.kv:380
+msgid "Set Z"
+msgstr ""
+
+#: makera.kv:389
+msgid "Auto Leveling"
+msgstr "自動調平"
+
+#: makera.kv:403
+msgid "max:"
+msgstr "最大:"
+
+#: makera.kv:407
+msgid "Clear"
+msgstr "清除"
+
+#: makera.kv:424
+msgid "Set A Origin"
+msgstr "設置A原點"
+
+#: makera.kv:426
+msgid "A = 0"
+msgstr ""
+
+#: makera.kv:435
+msgid "Set A"
+msgstr ""
+
+#: makera.kv:444
+msgid "Shrink"
+msgstr "壓縮A值"
+
+#: makera.kv:430
+msgid "Feed Status"
+msgstr "進給狀態"
+
+#: makera.kv:444 makera.kv:526
+msgid "Scale:"
+msgstr "調節:"
+
+#: makera.kv:449 makera.kv:530
+msgid "Target:"
+msgstr "目標:"
+
+#: makera.kv:453
+msgid "Speed Scaling"
+msgstr "速度調節"
+
+#: makera.kv:490 makera.kv:591 makera.kv:776 makera.kv:3462
+msgid "Reset"
+msgstr "重啟"
+
+#: makera.kv:512
+msgid "Spindle Status"
+msgstr "主軸狀態"
+
+#: makera.kv:534
+msgid "Temp:"
+msgstr "溫度:"
+
+#: makera.kv:537
+msgid "Auto Vacuum"
+msgstr "自動集塵"
+
+#: makera.kv:555
+msgid "RPM Scaling"
+msgstr "轉速調節"
+
+#: makera.kv:610
+msgid "Tool Status"
+msgstr "刀具狀態"
+
+#: makera.kv:624
+msgid "TLO:  "
+msgstr ""
+
+#: makera.kv:628
+msgid "WP:  "
+msgstr "探針: "
+
+#: makera.kv:634 makera.kv:637 makera.kv:638
+msgid "Change..."
+msgstr "更換…"
+
+#: makera.kv:641 makera.kv:2801
+msgid "Calibrate"
+msgstr "校準"
+
+#: makera.kv:648
+msgid "Drop"
+msgstr "釋放"
+
+#: makera.kv:657 makera.kv:660 makera.kv:661
+msgid "Set..."
+msgstr "設置…"
+
+msgid "Input Tool Number"
+msgstr "輸入刀具號"
+
+#: makera.kv:677
+msgid "Laser Status"
+msgstr "激光狀態"
+
+#: makera.kv:691
+msgid "scale:"
+msgstr "調節:"
+
+#: makera.kv:694
+msgid "Enable Laser"
+msgstr "使能激光"
+
+#: makera.kv:718
+msgid "Laser Test"
+msgstr "激光測試"
+
+#: makera.kv:737
+msgid "Power Scaling"
+msgstr "功率調節"
+
+#: makera.kv:887
+msgid "WIFI..."
+msgstr "無線…"
+
+msgid "Recent Connection"
+msgstr "最近的連接"
+
+#: makera.kv:894
+msgid " USB..."
+msgstr " 有線…"
+
+#: makera.kv:912
+msgid "Disconnect"
+msgstr "斷開連接"
+
+#: makera.kv:924
+msgid "Upload..."
+msgstr "上傳…"
+
+#: makera.kv:930 makera.kv:1785 makera.kv:1833 makera.kv:2174
+msgid "Download"
+msgstr "下載"
+
+#: makera.kv:936 makera.kv:1933
+msgid "Delete"
+msgstr "刪除"
+
+#: makera.kv:942 makera.kv:1925
+msgid "Rename"
+msgstr "重命名"
+
+#: makera.kv:1045
+msgid "Select Language"
+msgstr "請選擇語言"
+
+#: makera.kv:1057 makera.kv:1092 makera.kv:1121 makera.kv:1175 makera.kv:1286
+#: makera.kv:1350 makera.kv:1436 makera.kv:1517 makera.kv:1692
+msgid "Cancel"
+msgstr "取消"
+
+#: makera.kv:1060 makera.kv:1095 makera.kv:1148 makera.kv:1290 makera.kv:1354
+#: makera.kv:1440 makera.kv:1521 makera.kv:1696
+msgid "Ok"
+msgstr "確認"
+
+#: makera.kv:1077
+msgid "Input Box"
+msgstr "輸入框"
+
+#: makera.kv:1113
+msgid "Confirm Box"
+msgstr "確認框"
+
+#: makera.kv:1117 makera.kv:1142
+msgid "Confirm to continue?"
+msgstr "確認繼續？"
+
+#: makera.kv:1127
+msgid "Confirm"
+msgstr "確認"
+
+#: makera.kv:1196
+msgid "Auto-Set By Offset"
+msgstr "通過偏移設置"
+
+#: makera.kv:1211
+msgid "Anchor1"
+msgstr "錨點1"
+
+#: makera.kv:1220
+msgid "Anchor2"
+msgstr "錨點2"
+
+#: makera.kv:1229
+msgid "4Axis Origin"
+msgstr "4軸原點"
+
+#: makera.kv:1238
+msgid "Current Pos"
+msgstr "當前坐標"
+
+#: makera.kv:1246 makera.kv:1403
+msgid "X Offset:"
+msgstr "X偏移:"
+
+#: makera.kv:1252 makera.kv:1409
+msgid "Enter X Offset"
+msgstr "輸入X偏移"
+
+#: makera.kv:1260 makera.kv:1417
+msgid "Y Offset:"
+msgstr "Y偏移:"
+
+#: makera.kv:1266 makera.kv:1423
+msgid "Enter Y Offset"
+msgstr "輸入Y偏移"
+
+#: makera.kv:1277
+msgid "Note: Work origin will be set immediately when clicking OK."
+msgstr "注意: 工作坐標將會在確認後立刻設置。"
+
+#: makera.kv:1300
+msgid "Set By XYZ Probe"
+msgstr "XYZ對刀器"
+
+#: makera.kv:1311 makera.kv:1478
+msgid "Block Thickness:"
+msgstr "對刀器高度:"
+
+#: makera.kv:1317 makera.kv:1484
+msgid "Height Above Workpiece"
+msgstr "工件上方高度"
+
+#: makera.kv:1325 makera.kv:1492
+msgid "Tool Diameter:"
+msgstr "刀具直徑:"
+
+#: makera.kv:1331 makera.kv:1498
+msgid "Tool Diameter"
+msgstr "刀具直徑"
+
+#: makera.kv:1339 makera.kv:1506
+msgid ""
+"Note: Please make sure the probe is stably positioned and the magnet head is "
+"attached to the tool."
+msgstr "注意: 請確認手動對刀器擺放穩固並且磁吸頭吸附在刀具上。"
+
+#: makera.kv:1380
+msgid "Z Probe Config"
+msgstr "Z坐標探測配置"
+
+#: makera.kv:1468
+msgid "XYZ Probe At Current Position"
+msgstr "在當前位置進行XYZ對刀"
+
+#: makera.kv:1544
+msgid "Paring Wireless Probe"
+msgstr "無線探針配對"
+
+#: makera.kv:1558
+msgid "Start Pairing"
+msgstr "開始配對"
+
+#: makera.kv:1578 makera.kv:1865 makera.kv:2113 makera.kv:2180 makera.kv:2587
+#: makera.kv:2813
+msgid "Close"
+msgstr "關閉"
+
+#: makera.kv:1608
+msgid "Auto Leveling Config"
+msgstr "自動調平配置"
+
+#: makera.kv:1626
+msgid "Clearance Height:   "
+msgstr "淨空高度: "
+
+#: makera.kv:1638
+msgid "Min"
+msgstr "最小"
+
+#: makera.kv:1640
+msgid "Max"
+msgstr "最大"
+
+#: makera.kv:1642
+msgid "Step"
+msgstr "步距"
+
+#: makera.kv:1644
+msgid "Points"
+msgstr "探點"
+
+#: makera.kv:1727
+msgid "Upgrade"
+msgstr "更新"
+
+#: makera.kv:1737
+msgid " Check Updates on Startup"
+msgstr " 啟動時檢查更新"
+
+#: makera.kv:1755
+msgid "Controller"
+msgstr "控制器"
+
+#: makera.kv:1765 makera.kv:1813
+msgid " Update Log:"
+msgstr " 更新日誌:"
+
+#: makera.kv:1803 makera.kv:2147
+msgid "Firmware"
+msgstr "固件"
+
+#: makera.kv:1839
+msgid "Update"
+msgstr "更新"
+
+#: makera.kv:1860
+msgid "Check for Updates"
+msgstr "檢查更新"
+
+#: makera.kv:1905
+msgid "Remote"
+msgstr "遠程"
+
+#: makera.kv:1941
+msgid "New Folder"
+msgstr "新建目錄"
+
+#: makera.kv:1948
+msgid "Upload File"
+msgstr "上傳文件"
+
+#: makera.kv:2033 makera.kv:2266
+msgid "Search"
+msgstr "搜索"
+
+#: makera.kv:2062 makera.kv:2295
+msgid "Name "
+msgstr "名稱 "
+
+#: makera.kv:2069 makera.kv:2302
+msgid "Date Modified "
+msgstr "修改時間 "
+
+#: makera.kv:2079 makera.kv:2312
+msgid " Size"
+msgstr " 大小"
+
+#: makera.kv:2117
+msgid "Clear Selection"
+msgstr "清除選擇"
+
+#: makera.kv:2126
+msgid "Select"
+msgstr "選擇"
+
+#: makera.kv:2147
+msgid "Local"
+msgstr "本地"
+
+#: makera.kv:2167
+msgid "Upload"
+msgstr "上傳"
+
+#: makera.kv:2174
+msgid "Open"
+msgstr "打開"
+
+#: makera.kv:2266
+msgid "firmware"
+msgstr "固件"
+
+#: makera.kv:2366
+msgid "Config and Run"
+msgstr "配置並運行"
+
+#: makera.kv:2366
+msgid " Config and Do "
+msgstr " 配置並執行 "
+
+#: makera.kv:2402
+msgid " Set Work Origin"
+msgstr " 設置工作原點"
+
+#: makera.kv:2420
+msgid " (0, 0) from Anchor1"
+msgstr " (0, 0) 相對錨點1"
+
+#: makera.kv:2433 makera.kv:2515 makera.kv:2574
+msgid "Config"
+msgstr "配置"
+
+#: makera.kv:2454
+msgid " Scan Margin"
+msgstr " 掃描邊框"
+
+#: makera.kv:2487
+msgid " Auto Z Probe"
+msgstr " 自動Z軸對刀"
+
+#: makera.kv:2502
+msgid " (10, 10) from Path Origin"
+msgstr " (10, 10) 相對刀路原點"
+
+#: makera.kv:2546
+msgid " Auto Leveling"
+msgstr " 自動調平"
+
+#: makera.kv:2560
+msgid " X Points: 10, Y Points: 10, Height: 5"
+msgstr " X 探點: 10, Y 探點: 10, 抬起高度: 5"
+
+#: makera.kv:2591
+msgid "Run"
+msgstr "運行"
+
+#: makera.kv:2591
+msgid "Do "
+msgstr "執行 "
+
+#: makera.kv:2706
+msgid " Diagnose ( Be careful, do not change except diagnosing )"
+msgstr " 診斷( 請小心操作 )"
+
+#: makera.kv:2718
+msgid "Spindle"
+msgstr "主軸"
+
+#: makera.kv:2722
+msgid "SpindleFan"
+msgstr "主軸風扇"
+
+#: makera.kv:3000
+msgid "PowerFan"
+msgstr "電源風扇"
+
+#: makera.kv:2726
+msgid "Vacuum"
+msgstr "集塵"
+
+#: makera.kv:2734
+msgid "Light"
+msgstr "照明燈"
+
+#: makera.kv:2738
+msgid "Air"
+msgstr "吹氣"
+
+#: makera.kv:3010
+msgid "Extend output"
+msgstr "擴展輸出"
+
+msgid "Extend Input"
+msgstr "擴展輸入"
+
+#: makera.kv:2762
+msgid "ToolSensorPWR"
+msgstr "刀具檢測供電"
+
+#: makera.kv:2766
+msgid "WPChargePWR"
+msgstr "無線探針充電"
+
+#: makera.kv:2772
+msgid "X- Limit"
+msgstr "X-限位"
+
+#: makera.kv:2775
+msgid "Y- Limit"
+msgstr "Y-限位"
+
+#: makera.kv:2778
+msgid "ATC Limit"
+msgstr "自動對刀限位"
+
+#: makera.kv:2784
+msgid "Tool Sensor"
+msgstr "刀具檢測"
+
+#: makera.kv:3037
+msgid "Probe Laser"
+msgstr "探針激光"
+
+#: makera.kv:3041
+msgid "Beep"
+msgstr "蜂鳴器"
+
+#: makera.kv:2787
+msgid "E-Stop"
+msgstr "急停"
+
+#: makera.kv:2792
+msgid "X+ Limit"
+msgstr "X+限位"
+
+#: makera.kv:2795
+msgid "Y+ Limit"
+msgstr "Y+限位"
+
+#: makera.kv:2798
+msgid "Z+ Limit"
+msgstr "Z+限位"
+
+#: makera.kv:3076
+msgid "A+ Limit"
+msgstr "A+限位"
+
+#: makera.kv:3079
+msgid "C+ Limit"
+msgstr "C+限位"
+
+#: makera.kv:3079
+msgid "Spindle Temp"
+msgstr "主軸溫度"
+
+#: makera.kv:3079
+msgid "Power Temp"
+msgstr "電源溫度"
+
+#: makera.kv:2804
+msgid "Cover Switch"
+msgstr "上蓋開關"
+
+#: makera.kv:2830
+msgid " Settings"
+msgstr " 配置"
+
+#: makera.kv:2839
+msgid "Apply"
+msgstr "應用"
+
+#: makera.kv:3138
+msgid "FILE"
+msgstr "文件"
+
+#: makera.kv:3144
+msgid "Enter command..."
+msgstr "輸入命令…"
+
+#: makera.kv:3153
+msgid "send"
+msgstr "發送"
+
+#: makera.kv:3456
+msgid "Unlock"
+msgstr "解鎖"
+
+#: makera.kv:3468
+msgid "Home"
+msgstr "歸零"
+
+#: makera.kv:3475
+msgid "Margin..."
+msgstr "掃描邊框…"
+
+#: makera.kv:3488
+msgid "Probe..."
+msgstr "探測…"
+
+msgid "3D Probe..."
+msgstr "3D探測…"
+
+#: makera.kv:3488
+msgid "ZProbe..."
+msgstr "Z軸對刀…"
+
+#: makera.kv:3501
+msgid "AutoLevel..."
+msgstr "自動調平…"
+
+#: makera.kv:3517 makera.kv:3520 makera.kv:3521
+msgid "Goto..."
+msgstr "移動到…"
+
+#: makera.kv:3526
+msgid "Set Origin"
+msgstr "設置原點"
+
+#: makera.kv:3590
+msgid "SettingPage"
+msgstr "設置頁"
+
+#: makera.py:2428
+msgid "Decompressing"
+msgstr "正在解壓縮"
+
+#: makera.py:3122
+msgid "compressing"
+msgstr "正在壓縮"
+
+#: makera.py:3786
+msgid "Set X Current Pos"
+msgstr "設置當前 X 坐標"
+#: makera.py:3786
+msgid "Set Y Current Pos"
+msgstr "設置當前 Y 坐標"
+#: makera.py:3786
+msgid "Set Z Current Pos"
+msgstr "設置當前 Z 坐標"
+#: makera.py:3786
+msgid "Set A Current Pos"
+msgstr "設置當前 A 坐標"
+
+#: makera.kv:3799
+msgid "Enter X Pos"
+msgstr "輸入X坐標"
+msgid "Enter Y Pos"
+msgstr "輸入Y坐標"
+msgid "Enter Z Pos"
+msgstr "輸入Z坐標"
+msgid "Enter A Pos"
+msgstr "輸入A坐標"
+#: makera.kv:453
+msgid "Fast Move"
+msgstr "快速移動"
+#: makera.kv:4021
+msgid "Rapidly move the A to"
+msgstr "將A軸快速移動到"
+
+#: makera.py:2169
+msgid "Changing Tool"
+msgstr "更換刀具"
+
+msgid "Please change to tool: "
+msgstr "請更換為刀具："
+
+msgid "Then press ' Confirm ' or main button to proceed"
+msgstr "然後點擊\" 確認 \"或主按鈕"
+
+#以下為Tooltip提示
+msgid "Status and Connection"
+msgstr "運行狀態和連接設置"
+
+msgid "X-axis working coordinate setting"
+msgstr "X軸工作坐標設置"
+
+msgid "Y-axis working coordinate setting"
+msgstr "Y軸工作坐標設置"
+
+msgid "Z-axis working coordinate setting"
+msgstr "Z軸工作坐標設置"
+
+msgid "A-axis working coordinate setting"
+msgstr "A軸工作坐標設置"
+
+msgid "Feed status and control"
+msgstr "進給狀態和控制"
+
+msgid "Spindle status and control"
+msgstr "主軸狀態和控制"
+
+msgid "Tool status and control"
+msgstr "主軸狀態和控制"
+
+msgid "Laser status and control"
+msgstr "激光狀態和控制"
+
+msgid "Other functions"
+msgstr "其它功能"
+
+msgid "Switch to display file preview interface"
+msgstr "切換到刀路文件預覽界面"
+
+msgid "Switch to display manual control interface"
+msgstr "切換到手動控制界面"
+
+msgid "Device status diagnose"
+msgstr "設備狀態診斷"
+
+msgid "WiFi configuration"
+msgstr "配置WiFi網絡"
+
+msgid "Wireless Probe Pairing"
+msgstr "無線探針配對"
+
+msgid "Software and firmware Upgrade"
+msgstr "軟件和固件升級"
+
+msgid "language selection"
+msgstr "語言選擇"
+
+msgid "Parameters settings"
+msgstr "參數設置"
+
+msgid "Open the G-Code file ready for play"
+msgstr "打開準備運行的G-Code文件"
+
+msgid "Start running G-Code task"
+msgstr "開始加工任務"
+
+msgid "Pause the running G-Code task"
+msgstr "暫停加工任務"
+
+msgid "Terminate the current G-Code task"
+msgstr "終止加工任務"
+
+msgid "Hold the current G-Code task"
+msgstr "保持當前加工狀態"
+
+msgid "Emergency stop the current G-Code task"
+msgstr "緊急停止加工任務"
+
+msgid "Recent connection, click to reconnect"
+msgstr "上次連接的設備，點擊重連"
+
+msgid "Connecting Machine via WiFi"
+msgstr "通過WiFi連接機器"
+
+msgid "Connecting Machine via USB"
+msgstr "通過USB連接機器"
+
+msgid "Unlock machine"
+msgstr "解鎖機器"
+
+msgid "Disconnect with the machine"
+msgstr "與機器斷開連接"
+
+msgid "Set the current position as the work origin of X"
+msgstr "將當前位置設置為X的工作原點"
+
+msgid "Set the working coordinate value of X for the current position"
+msgstr "為當前位置設置X的工作坐標值"
+
+msgid "Set the current position as the work origin of Y"
+msgstr "將當前位置設置為Y的工作原點"
+
+msgid "Set the working coordinate value of Y for the current position"
+msgstr "為當前位置設置Y的工作坐標值"
+
+msgid "Set the current position as the work origin of Z"
+msgstr "將當前位置設置為Z的工作原點"
+
+msgid "Set the working coordinate value of Z for the current position"
+msgstr "為當前位置設置Z的工作坐標值"
+
+msgid "Clear the data for auto leveling"
+msgstr "清除自動調平的數據"
+
+msgid "Set the current position as the work origin of A"
+msgstr "將當前位置設置為A的工作原點"
+
+msgid "Set the working coordinate value of A for the current position"
+msgstr "為當前位置設置A的工作坐標值"
+
+msgid "Shrink the mechanical coordinates based on the remainder of 360"
+msgstr "將機械坐標根據360的餘數進行收縮"
+
+msgid "Fastly move the specified work coordinates"
+msgstr "快速移動到指定工作坐標"
+
+msgid "Reset the feed speed scaling value to 100%"
+msgstr "將進給速度縮放值重置為100%"
+
+msgid "Reset the RPM scaling value to 100%"
+msgstr "將主軸轉速縮放值重置為100%"
+
+msgid "Automatically calibrate the current tool and set TLO"
+msgstr "自動校準當前刀具並設置TLO"
+
+msgid "Drop the current tool"
+msgstr "釋放當前刀具"
+
+msgid "Manually set the current tool number"
+msgstr "手動設置當前刀具號"
+
+msgid "Change to the selected tool,and auto calibration"
+msgstr "更換為所選刀具，並自動校準"
+
+msgid "Reset the Laser power scaling value to 100%"
+msgstr "將激光功率縮放值重置為100%"
+
+msgid "Upload&Select"
+msgstr "上傳&選擇"
+
+msgid "The tool number must less than 1000!"
+msgstr "刀具號必須小於1000！"
+
+msgid "Machine has not been homed,Please home first!"
+msgstr "機器還沒有歸零，請先執行歸零操作！"
+
+msgid "The spindle has stopped spinning"
+msgstr "主軸已經停止旋轉"
+
+msgid "Confirm to resume playing!"
+msgstr "確認恢復加工！"
+
+msgid "Firmware version mismatch! \nPlease use a Controller with version V0.9.11 or earlier \nto upgrade the firmware to V1.0.4."
+msgstr "韌體版本不相容！\n請使用V0.9.11及以前版本的Controller將韌體升級至V1.0.4版本。"

@@ -1,0 +1,9 @@
+echo ATC TEST Start...
+T0M6
+T1M6
+T2M6
+T3M6
+T4M6
+T5M6
+T6M6
+echo ATC TEST End

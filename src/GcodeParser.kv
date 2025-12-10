@@ -1,0 +1,53 @@
+#:kivy 1.1.0
+
+<NewLabel@Label>:
+    text_size: self.size
+
+<RV>:
+    viewclass: 'NewLabel'
+    bar_width: dp(10)
+    scroll_type: ['bars', 'content']
+    scroll_wheel_distance: dp(114)
+    RecycleBoxLayout:
+        default_size: None, dp(20)
+        default_size_hint: 1, None
+        size_hint_y: None
+        height: self.minimum_height
+        orientation: 'vertical'
+
+<GcodeParser>:
+    rv_origin: rv_origin
+    rv_parser: rv_parser
+
+    BoxLayout:
+        orientation: 'vertical'
+        BoxLayout:
+            size_hint_y: None
+            height: 60
+            Button:
+                text: 'Load'
+                on_release: root.show_load()
+        BoxLayout:
+            RV:
+                id: rv_origin
+            RV:
+                id: rv_parser
+
+<LoadDialog>:
+    BoxLayout:
+        size: root.size
+        pos: root.pos
+        orientation: "vertical"
+        FileChooserListView:
+            id: filechooser
+
+        BoxLayout:
+            size_hint_y: None
+            height: 30
+            Button:
+                text: "Cancel"
+                on_release: root.cancel()
+
+            Button:
+                text: "Load"
+                on_release: root.load(filechooser.path, filechooser.selection)
