@@ -3,6 +3,8 @@ This repository manages binary releases of [CarveraController](https://www.maker
 Checkout the [Releases Page](https://github.com/MakeraInc/CarveraController/releases) for downloads.
 
 ----
+# License
+CarveraController is released under the GNU GPL v3, which you can find at http://www.gnu.org/licenses/gpl-3.0.en.html
 
 # Installation
 
