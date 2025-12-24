@@ -1,6 +1,24 @@
 Notice: 
 To let the Carvera work perfectly, please make sure both your controller software and firmware are up to date. For controller software, just download the according version of the package and reinstall.
 
+[0.9.13]
+Important Notes
+The firmware version v1.0.5 requires v0.9.13 Controller or higher.
+​​Please follow these steps:​​
+
+1.Use the v0.9.11 Controller to upgrade the firmware to v1.0.5.
+2.Then update the Controller to v0.9.13.
+(Note: This ensures compatibility between the Controller and firmware versions.)
+
+Overview of this upgrade
+1.​​Bug Fix​​: Fixed a crash issue when clicking "Confirm" with an empty input field in the Controller.
+2.​​Bug Fix​​: Fixed abnormal display issues in toolpath preview.
+3.​​Optimization​​: Enhanced firmware-Controller communication for improved file transfer reliability.
+4.​​Optimization​​: Added a check for spindle rotation before resuming paused machining. If not rotating, a confirmation dialog will prompt whether to proceed.
+5.​​Optimization​​: Added Wi-Fi signal strength (RSSI) between the machine’s Wi-Fi module and the router on the diagnostics page.
+6.Optimization​​: Added a toggle button for enabling/disabling ​​'Auto Extout'​​ in the ​​'Config and Run'​​ dialog.
+7.Optimization:The button 'ZProbe...' has been renamed to 'Probe...', and now includes two new sub-buttons: 'ZProbe...' and '3D Probe...'.
+
 [0.9.11]
 1. Optimizing: Enabled the upgrade button on the taskbar to be clickable even when the machine is not connected or in an idle state.
 2. Optimizing: Added Tooltip functionality to buttons.
