@@ -22,6 +22,7 @@ from kivy.utils import platform as kivy_platform
 if kivy_platform != "ios":
     from USBStream import USBStream
 from WIFIStream import WIFIStream
+from XMODEM import EOT, CAN
 from kivy.app import App
 import Utils
 
@@ -243,75 +244,87 @@ class Controller:
     # 单字节命令
     # ----------------------------------------------------------------------
     def executeSingleCharCommand(self, char: int):
-        """
-        将单个字符封装成通信报文
-        报文格式: [帧头][数据长度][指令类型][数据内容][CRC16][帧尾]
-        - 帧头: 0x8668 (2字节，不参与CRC计算)
-        - 数据长度: 数据内容长度 (2字节)
-        - 指令类型: 0xA1 (1字节)
-        - 数据内容: char (1字节)
-        - CRC16: 计算范围(数据长度 + 指令类型 + 数据内容) (2字节)
-        - 帧尾: 0x55AA (2字节，不参与CRC计算)
-        """
+        app = App.get_running_app()
+        if app.root.oldfirmware == False:
+            """
+            将单个字符封装成通信报文
+            报文格式: [帧头][数据长度][指令类型][数据内容][CRC16][帧尾]
+            - 帧头: 0x8668 (2字节，不参与CRC计算)
+            - 数据长度: 数据内容长度 (2字节)
+            - 指令类型: 0xA1 (1字节)
+            - 数据内容: char (1字节)
+            - CRC16: 计算范围(数据长度 + 指令类型 + 数据内容) (2字节)
+            - 帧尾: 0x55AA (2字节，不参与CRC计算)
+            """
 
-        # 数据内容长度（4字节）
-        data_length = 4         # 指令类型(1) + 数据内容(1) + CRC(2) = 4字节
+            # 数据内容长度（4字节）
+            data_length = 4         # 指令类型(1) + 数据内容(1) + CRC(2) = 4字节
 
-        # 构造CRC计算部分（数据长度2字节 + 指令类型1字节 + 数据内容1字节）
-        crc_data = (
-                data_length.to_bytes(2, 'big') +  # 2字节数据长度
-                PTYPE_CTRL_SINGLE.to_bytes(1, 'big') +  # 1字节指令类型
-                char.to_bytes(1, 'big')  # 1字节数据内容
-        )
-        crc = self.crc16_ccitt(crc_data, 0)
+            # 构造CRC计算部分（数据长度2字节 + 指令类型1字节 + 数据内容1字节）
+            crc_data = (
+                    data_length.to_bytes(2, 'big') +  # 2字节数据长度
+                    PTYPE_CTRL_SINGLE.to_bytes(1, 'big') +  # 1字节指令类型
+                    char.to_bytes(1, 'big')  # 1字节数据内容
+            )
+            crc = self.crc16_ccitt(crc_data, 0)
 
-        # 构造完整报文（字节序：大端）
-        packet = (
-                FRAME_HEADER.to_bytes(2, byteorder='big') +  # 帧头（2字节）
-                crc_data +  # 数据长度 + 指令类型 + 数据内容（4字节）
-                crc.to_bytes(2, byteorder='big') +  # CRC16（2字节）
-                FRAME_END.to_bytes(2, byteorder='big')  # 帧尾（2字节）
-        )
+            # 构造完整报文（字节序：大端）
+            packet = (
+                    FRAME_HEADER.to_bytes(2, byteorder='big') +  # 帧头（2字节）
+                    crc_data +  # 数据长度 + 指令类型 + 数据内容（4字节）
+                    crc.to_bytes(2, byteorder='big') +  # CRC16（2字节）
+                    FRAME_END.to_bytes(2, byteorder='big')  # 帧尾（2字节）
+            )
 
-        self.stream.send(packet)
+            self.stream.send(packet)
+        else:
+            line = chr(char)
+            self.stream.send(line.encode())
 
     def executeMultiCharCommand(self, data: bytes) -> bytes:
-        """
-        封装多字节数据成通信报文
-        报文格式: [帧头][数据长度(2字节)][指令类型][数据内容][CRC16][帧尾]
+        app = App.get_running_app()
+        if app.root.oldfirmware == False:
+            """
+            封装多字节数据成通信报文
+            报文格式: [帧头][数据长度(2字节)][指令类型][数据内容][CRC16][帧尾]
+    
+            参数:
+                data: 字节类型数据（如 b'\x01\x02\x03'）
+    
+            数据长度自动计算: 指令类型(1) + 数据内容(N) + CRC16(2) = N+3 字节
+            """
+            # 输入校验
+            if not isinstance(data, bytes):
+                raise TypeError("data 必须是 bytes 类型")
 
-        参数:
-            data: 字节类型数据（如 b'\x01\x02\x03'）
+            DATA_LENGTH = 1 + len(data) + 2  # 指令类型(1) + 数据内容(N) + CRC(2)
 
-        数据长度自动计算: 指令类型(1) + 数据内容(N) + CRC16(2) = N+3 字节
-        """
-        # 输入校验
-        if not isinstance(data, bytes):
-            raise TypeError("data 必须是 bytes 类型")
+            # 构造CRC计算部分（长度字段+指令类型+数据内容）
+            crc_payload = (
+                    DATA_LENGTH.to_bytes(2, 'big') +  # 2字节长度（新增）
+                    bytes([PTYPE_CTRL_MULTI]) +  # 1字节指令类型
+                    data  # N字节数据
+            )
 
-        DATA_LENGTH = 1 + len(data) + 2  # 指令类型(1) + 数据内容(N) + CRC(2)
+            # 计算CRC（使用您提供的crc16_ccitt函数）
+            crc = self.crc16_ccitt(crc_payload, 0)  # 包含长度字段的CRC
 
-        # 构造CRC计算部分（长度字段+指令类型+数据内容）
-        crc_payload = (
-                DATA_LENGTH.to_bytes(2, 'big') +  # 2字节长度（新增）
-                bytes([PTYPE_CTRL_MULTI]) +  # 1字节指令类型
-                data  # N字节数据
-        )
+            # 组装完整报文
+            packet = (
+                    FRAME_HEADER.to_bytes(2, 'big') +  # 2字节帧头
+                    DATA_LENGTH.to_bytes(2, 'big') +  # 2字节长度
+                    bytes([PTYPE_CTRL_MULTI]) +  # 1字节指令类型
+                    data +  # N字节数据
+                    crc.to_bytes(2, 'big') +  # 2字节CRC（小端序）
+                    FRAME_END.to_bytes(2, 'big')  # 2字节帧尾
+            )
 
-        # 计算CRC（使用您提供的crc16_ccitt函数）
-        crc = self.crc16_ccitt(crc_payload, 0)  # 包含长度字段的CRC
-
-        # 组装完整报文
-        packet = (
-                FRAME_HEADER.to_bytes(2, 'big') +  # 2字节帧头
-                DATA_LENGTH.to_bytes(2, 'big') +  # 2字节长度
-                bytes([PTYPE_CTRL_MULTI]) +  # 1字节指令类型
-                data +  # N字节数据
-                crc.to_bytes(2, 'big') +  # 2字节CRC（小端序）
-                FRAME_END.to_bytes(2, 'big')  # 2字节帧尾
-        )
-
-        self.stream.send(packet)
+            self.stream.send(packet)
+        else:
+            text = data.decode('utf-8')
+            if text[-1] != '\n':
+                text += "\n"
+            self.stream.send(text.encode())
 
     def executeFileCommand(self, data: bytes) -> bytes:
         """
@@ -374,11 +387,17 @@ class Controller:
     def executeTransfileCommand(self, line, nodisplay=False):
         # if self.sio_status != False or self.sio_diagnose != False:      #wait for the ? or * command
         #    time.sleep(0.5)
+        app = App.get_running_app()
         if self.stream and line:
             try:
                 if line[-1] != '\n':
                     line += "\n"
-                self.executeFileCommand(line.encode())
+                if app.root.oldfirmware == False:
+                    self.executeFileCommand(line.encode())
+                else:
+                    if line[-1] != '\n':
+                        line += "\n"
+                    self.stream.send(line.encode())
                 if self.execCallback:
                     # 检查文件名是否以 ".lz" 结尾
                     if line.endswith(".lz\n"):
@@ -617,21 +636,25 @@ class Controller:
         self.executeCommand("M491")
 
     def changeToolCommand(self, tool):
-        if tool == 'e':
+        if tool == tr._("Probe"):
             self.executeCommand("M6T0")
-        elif tool == 'r':
+        elif tool == tr._("Laser"):
             self.executeCommand("M6T8888")
         else:
+            if tool.startswith('Tool: '):
+                tool = tool[6:]
             self.executeCommand("M6T%s" % tool)
 
     def setToolCommand(self, tool):
-        if tool == 'e':
+        if tool == tr._("Probe"):
             self.executeCommand("M493.2T0")
-        elif tool == 'r':
+        elif tool == tr._("Laser"):
             self.executeCommand("M493.2T8888")
-        elif tool == 'y':
+        elif tool == tr._("Empty"):
             self.executeCommand("M493.2T-1")
         else:
+            if tool.startswith('Tool: '):
+                tool = tool[6:]
             self.executeCommand("M493.2T%s" % tool)
 
     def bufferChangeToolCommand(self, tool):
@@ -1230,70 +1253,104 @@ class Controller:
                     td = t
 
                 if self.stream.waiting_for_recv():
-                    received = [bytes([b]) for b in self.stream.recv()]
-                    for byte in received:
-                        byte = ord(byte)
-                        if self.currentState == RevPacketState.WAIT_HEADER:
-                            self.headerBuffer[0] = self.headerBuffer[1]
-                            self.headerBuffer[1] = byte
-                            checksum = (self.headerBuffer[0] << 8) | self.headerBuffer[1]
-                            if checksum == FRAME_HEADER:
-                                self.currentState = RevPacketState.READ_LENGTH
-                                self.bytesNeeded = 2
-                                self.packetData.clear()
+                    if app.root.oldfirmware == False:
+                        received = [bytes([b]) for b in self.stream.recv()]
+                        for byte in received:
+                            byte = ord(byte)
+                            if self.currentState == RevPacketState.WAIT_HEADER:
+                                self.headerBuffer[0] = self.headerBuffer[1]
+                                self.headerBuffer[1] = byte
+                                checksum = (self.headerBuffer[0] << 8) | self.headerBuffer[1]
+                                if checksum == FRAME_HEADER:
+                                    self.currentState = RevPacketState.READ_LENGTH
+                                    self.bytesNeeded = 2
+                                    self.packetData.clear()
 
-                        elif self.currentState == RevPacketState.READ_LENGTH:
-                            self.packetData.append(byte)
-                            self.bytesNeeded -= 1
-                            if self.bytesNeeded == 0:
-                                self.expectedLength = (self.packetData[0] << 8) | self.packetData[1]
-                                if (self.expectedLength >= 0) and (self.expectedLength <= 8200):
-                                    self.currentState = RevPacketState.READ_DATA
-                                    self.bytesNeeded = self.expectedLength
-                                else:
-                                    self.currentState = RevPacketState.WAIT_HEADER
-
-                        elif self.currentState == RevPacketState.READ_DATA:
-                            self.packetData.append(byte)
-                            self.bytesNeeded -= 1
-                            if self.bytesNeeded == 0:
-                                # Last two bytes are CRC
-                                self.currentState = RevPacketState.CHECK_FOOTER
-                                self.bytesNeeded = 2
-
-                        elif self.currentState == RevPacketState.CHECK_FOOTER:
-                            self.footerBuffer[0] = self.footerBuffer[1]
-                            self.footerBuffer[1] = byte
-                            self.bytesNeeded -= 1
-                            if self.bytesNeeded == 0:
-                                checksum = (self.footerBuffer[0] << 8) | self.footerBuffer[1]
-                                self.currentState = RevPacketState.WAIT_HEADER
-                                if checksum == FRAME_END:
-                                    cmd = self.process_packet()
-                                    if cmd == PTYPE_STATUS_RES or cmd == PTYPE_DIAG_RES or  cmd == PTYPE_NORMAL_INFO:
-                                        line = self.packetData[3:-3]    #去除报文前面的长度+报文类型字段，去除报文最后的CRC字段
-                                        self.parseLine(line.decode(errors='ignore'))
-                                    elif cmd == PTYPE_LOAD_FINISH:
-                                        self.loadEOF = True
-                                    elif cmd == PTYPE_LOAD_ERROR:
-                                        self.loadERR = True
+                            elif self.currentState == RevPacketState.READ_LENGTH:
+                                self.packetData.append(byte)
+                                self.bytesNeeded -= 1
+                                if self.bytesNeeded == 0:
+                                    self.expectedLength = (self.packetData[0] << 8) | self.packetData[1]
+                                    if (self.expectedLength >= 0) and (self.expectedLength <= 8200):
+                                        self.currentState = RevPacketState.READ_DATA
+                                        self.bytesNeeded = self.expectedLength
                                     else:
-                                        line = self.packetData[3:-3]  # 去除报文前面的长度+报文类型字段，去除报文最后的CRC字段
-                                        if self.loadNUM == 0:
+                                        self.currentState = RevPacketState.WAIT_HEADER
+
+                            elif self.currentState == RevPacketState.READ_DATA:
+                                self.packetData.append(byte)
+                                self.bytesNeeded -= 1
+                                if self.bytesNeeded == 0:
+                                    # Last two bytes are CRC
+                                    self.currentState = RevPacketState.CHECK_FOOTER
+                                    self.bytesNeeded = 2
+
+                            elif self.currentState == RevPacketState.CHECK_FOOTER:
+                                self.footerBuffer[0] = self.footerBuffer[1]
+                                self.footerBuffer[1] = byte
+                                self.bytesNeeded -= 1
+                                if self.bytesNeeded == 0:
+                                    checksum = (self.footerBuffer[0] << 8) | self.footerBuffer[1]
+                                    self.currentState = RevPacketState.WAIT_HEADER
+                                    if checksum == FRAME_END:
+                                        cmd = self.process_packet()
+                                        if cmd == PTYPE_STATUS_RES or cmd == PTYPE_DIAG_RES or  cmd == PTYPE_NORMAL_INFO:
+                                            line = self.packetData[3:-3]    #去除报文前面的长度+报文类型字段，去除报文最后的CRC字段
                                             self.parseLine(line.decode(errors='ignore'))
+                                        elif cmd == PTYPE_LOAD_FINISH:
+                                            self.loadEOF = True
+                                        elif cmd == PTYPE_LOAD_ERROR:
+                                            self.loadERR = True
                                         else:
-                                            # 将字节串解码为字符串
-                                            decoded_line = line.decode(errors='ignore')
-                                            # 使用正则表达式去除以"<"开头，以">"结尾的部分
-                                            cleaned_line = re.sub(r'<.*?>', '', decoded_line)
-                                            # 去除多余的空格（如果需要）
-                                            cleaned_line = cleaned_line.strip()
-                                            if len(cleaned_line) != 0:
-                                                split_lines = cleaned_line.replace('\r\n', '\n').split('\n')
-                                                for line2 in split_lines:
-                                                    self.load_buffer.put(line2)
-                                                    self.load_buffer_size += len(line2) + 1
-                    dynamic_delay = 0
+                                            line = self.packetData[3:-3]  # 去除报文前面的长度+报文类型字段，去除报文最后的CRC字段
+                                            if self.loadNUM == 0:
+                                                self.parseLine(line.decode(errors='ignore'))
+                                            else:
+                                                # 将字节串解码为字符串
+                                                decoded_line = line.decode(errors='ignore')
+                                                # 使用正则表达式去除以"<"开头，以">"结尾的部分
+                                                cleaned_line = re.sub(r'<.*?>', '', decoded_line)
+                                                # 去除多余的空格（如果需要）
+                                                cleaned_line = cleaned_line.strip()
+                                                if len(cleaned_line) != 0:
+                                                    split_lines = cleaned_line.replace('\r\n', '\n').split('\n')
+                                                    for line2 in split_lines:
+                                                        self.load_buffer.put(line2)
+                                                        self.load_buffer_size += len(line2) + 1
+                        dynamic_delay = 0
+                    else:
+                        received = [bytes([b]) for b in self.stream.recv()]
+                        for c in received:
+                            if c == EOT or c == CAN:
+                                # Ctrl + Z means transmission complete, Ctrl + D means transmission cancel or error
+                                if len(line) > 0:
+                                    self.load_buffer.put(line.decode(errors='ignore'))
+                                    if self.loadNUM > 0:
+                                        self.load_buffer_size += len(line)
+                                line = b''
+                                if c == EOT:
+                                    self.loadEOF = True
+                                else:
+                                    self.loadERR = True
+                            else:
+                                if c == b'\n':
+                                    # (line.decode(errors='ignore'))
+                                    if self.loadNUM == 0 or '|MPos' in line.decode(errors='ignore'):
+                                        self.parseLine(line.decode(errors='ignore'))
+                                    else:
+                                        # 将字节串解码为字符串
+                                        decoded_line = line.decode(errors='ignore')
+                                        # 使用正则表达式去除以"<"开头，以">"结尾的部分
+                                        cleaned_line = re.sub(r'<.*?>', '', decoded_line)
+                                        # 去除多余的空格（如果需要）
+                                        cleaned_line = cleaned_line.strip()
+                                        if len(cleaned_line) != 0:
+                                            self.load_buffer.put(cleaned_line)
+                                            self.load_buffer_size += len(cleaned_line) + 1
+                                    line = b''
+                                else:
+                                    line += c
+                        dynamic_delay = 0
                 else:
                     if self.sendNUM == 0 and self.loadNUM == 0:
                         dynamic_delay = (0.1 if dynamic_delay >= 0.09 else dynamic_delay + 0.01)
