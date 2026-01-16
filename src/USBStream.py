@@ -7,6 +7,7 @@ import Utils
 
 from XMODEM import XMODEM
 import logging
+from kivy.app import App
 
 
 SERIAL_TIMEOUT = 0.3  # s
@@ -93,13 +94,21 @@ class USBStream:
     def upload(self, filename, local_md5, callback):
         # do upload
         stream = open(filename, 'rb')
-        result = self.modem.send(stream, md5 = local_md5, retry = 50, callback = callback)
+        app = App.get_running_app()
+        if app.root.oldfirmware == False:
+            result = self.modem.send(stream, md5 = local_md5, retry = 50, callback = callback)
+        else:
+            result = self.modem.send_old(stream, md5=local_md5, retry=50, callback=callback)
         stream.close()
         return result
 
     def download(self, filename, local_md5, callback):
         stream = open(filename, 'wb')
-        result = self.modem.recv(stream, md5 = local_md5, retry = 50, callback = callback)
+        app = App.get_running_app()
+        if app.root.oldfirmware == False:
+            result = self.modem.recv(stream, md5 = local_md5, retry = 50, callback = callback)
+        else:
+            result = self.modem.recv_old(stream, md5=local_md5, retry=50, callback=callback)
         stream.close()
         return result
 
