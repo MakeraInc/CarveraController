@@ -12,6 +12,17 @@ from functools import partial
 
 from enum import Enum, auto
 
+
+# Protocol bytes
+SOH = b'\x01'
+STX = b'\x02'
+EOT = b'\x04'
+ACK = b'\x06'
+DLE = b'\x10'
+NAK = b'\x15'
+CAN = b'\x16'
+CRC = b'C'
+
 # Constants
 FRAME_HEADER = 0x8668
 FRAME_END = 0x55AA
@@ -92,6 +103,9 @@ class XMODEM(object):
         self.mode_set = False
 
     def abort(self, count=2, timeout=60):
+        self.SendFileTransCommand(PTYPE_FILE_CAN, b"")
+
+    def abort_old(self, count=2, timeout=60):
         '''
         Send an abort sequence using CAN bytes.
 
@@ -100,8 +114,8 @@ class XMODEM(object):
         :param timeout: timeout in seconds
         :type timeout: int
         '''
-        self.SendFileTransCommand(PTYPE_FILE_CAN, b"")
-
+        for _ in range(count):
+            self.putc(CAN, timeout)
 
     def crc16_ccitt(self, data: bytes, length: int) -> int:
         """Calculate CRC-16-CCITT checksum using the lookup table method"""
@@ -345,6 +359,252 @@ class XMODEM(object):
                 self.FileRcvState = FileTransState.WAIT_MD5
                 return None
 
+    def recv_old(self, stream, md5='', crc_mode=1, retry=16, timeout=1, delay=0.1, quiet=0, callback=None):
+        '''
+        Receive a stream via the XMODEM protocol.
+
+            >>> stream = open('/etc/issue', 'wb')
+            >>> print(modem.recv(stream))
+            2342
+
+        Returns the number of bytes received on success or ``None`` in case of
+        failure or -1 in case of canceled or 0 in case of md5 equal.
+
+        :param stream: The stream object to write data to.
+        :type stream: stream (file, etc.)
+        :param crc_mode: XMODEM CRC mode
+        :type crc_mode: int
+        :param retry: The maximum number of times to try to resend a failed
+                      packet before failing.
+        :type retry: int
+        :param timeout: The number of seconds to wait for a response before
+                        timing out.
+        :type timeout: int
+        :param delay: The number of seconds to wait between resend attempts
+        :type delay: int
+        :param quiet: If ``True``, write transfer information to stderr.
+        :type quiet: bool
+        :param callback: Reference to a callback function that has the
+                         following signature.  This is useful for
+                         getting status updates while a xmodem
+                         transfer is underway.
+                         Expected callback signature:
+                         def callback(success_count, error_count)
+        :type callback: callable
+
+        '''
+
+        # initiate protocol
+        success_count = 0
+        error_count = 0
+        char = 0
+        cancel = 0
+        while True:
+            # first try CRC mode, if this fails,
+            # fall back to checksum mode
+            if error_count >= retry:
+                self.log.info('error_count reached %d, aborting.', retry)
+                self.abort_old(timeout=timeout)
+                return None
+            elif crc_mode and error_count < (retry // 2):
+                if not self.putc(CRC):
+                    self.log.debug('recv error: putc failed, '
+                                   'sleeping for %d', delay)
+                    time.sleep(0.1)  # time.sleep(delay)
+                    error_count += 1
+            else:
+                crc_mode = 0
+                if not self.putc(NAK):
+                    self.log.debug('recv error: putc failed, '
+                                   'sleeping for %d', delay)
+                    time.sleep(0.1)  # time.sleep(delay)
+                    error_count += 1
+
+            char = self.getc(1, timeout)
+            if char is None:
+                self.log.warn('recv error: getc timeout in start sequence')
+                error_count += 1
+                continue
+            elif char == SOH:
+                if not self.mode_set:
+                    self.mode = 'USBMode'
+                    self.mode_set = True
+                self.log.debug('recv: SOH')
+                break
+            elif char == STX:
+                if not self.mode_set:
+                    self.mode = 'wifiMode'
+                    self.mode_set = True
+                self.log.debug('recv: STX')
+                break
+            elif char == CAN:
+                if cancel:
+                    self.log.info('Transmission canceled: received 2xCAN '
+                                  'at start-sequence')
+                    return None
+                else:
+                    self.log.debug('cancellation at start sequence.')
+                    cancel = 1
+            else:
+                error_count += 1
+                time.sleep(0.5)
+
+        # read data
+        error_count = 0
+        income_size = 0
+        # initialize protocol
+
+        packet_size = 8192
+        try:
+            packet_size = dict(
+                USBMode=128,
+                wifiMode=8192,
+            )[self.mode]
+        except KeyError:
+            raise ValueError("Invalid mode specified: {self.mode!r}"
+                             .format(self=self))
+        is_stx = 1 if packet_size > 255 else 0
+
+        sequence = 0
+        cancel = 0
+        retrans = retry + 1
+        md5_received = False
+
+        while True:
+            if self.canceled:
+                self.putc(CAN)
+                self.putc(CAN)
+                self.putc(CAN)
+                while self.getc(1, timeout):
+                    pass
+                self.log.info('Transmission canceled by user.')
+                self.canceled = False
+                return -1
+            while True:
+                if char == SOH or char == STX:
+                    break
+                elif char == EOT:
+                    # We received an EOT, so send an ACK and return t
+                    #                     he
+                    # received data length.
+                    self.putc(ACK)
+                    self.log.info("Transmission complete, %d bytes",
+                                  income_size)
+                    return income_size
+                elif char == CAN:
+                    # cancel at two consecutive cancels
+                    if cancel:
+                        self.log.info('Transmission canceled: received 2xCAN '
+                                      'at block %d', sequence)
+                        return None
+                    else:
+                        self.log.debug('cancellation at block %d', sequence)
+                        cancel = 1
+                elif char == None:
+                    # no data avaliable
+                    error_count += 1
+                    if error_count > retry:
+                        self.log.error('error_count reached %d, aborting.',
+                                       retry)
+                        self.abort_old()
+                        return None
+                    # get next start-of-header bytexs
+                    char = self.getc(1, 0.5)  # char = self.getc(1, timeout)
+                    continue
+                else:
+                    err_msg = ('recv error: expected SOH, EOT; '
+                               'got {0!r}'.format(char))
+                    if not quiet:
+                        print(err_msg, file=sys.stderr)
+                    self.log.warn(err_msg)
+                    error_count += 1
+                    if error_count > retry:
+                        self.abort_old()
+                        return None
+                    else:
+                        while True:
+                            if self.getc(1, timeout) == None:
+                                break
+                        self.putc(NAK)
+                        char = self.getc(1, timeout)
+                    continue
+
+            # read sequence
+            error_count = 0
+            cancel = 0
+            self.log.debug('recv: data block %d', sequence)
+            seq1 = self.getc(1, timeout)
+            if seq1 is None:
+                self.log.warn('getc failed to get first sequence byte')
+                seq2 = None
+            else:
+                seq1 = ord(seq1)
+                seq2 = self.getc(1, timeout)
+                if seq2 is None:
+                    self.log.warn('getc failed to get second sequence byte')
+                else:
+                    # second byte is the same as first as 1's complement
+                    seq2 = 0xff - ord(seq2)
+
+            if not (seq1 == seq2 == sequence):
+                # consume data anyway ... even though we will discard it,
+                # it is not the sequence we expected!
+                self.log.error('expected sequence %d, '
+                               'got (seq1=%r, seq2=%r), '
+                               'receiving next block, will NAK.',
+                               sequence, seq1, seq2)
+                self.getc(2 + packet_size + 1 + crc_mode)
+            else:
+                # sequence is ok, read packet
+                # packet_size + checksum
+                # self.log.warn('Got sequence %d', sequence)
+                data = self.getc(1 + is_stx + packet_size + 1 + crc_mode, timeout)
+                if data is None:
+                    self.log.warn('recv error: We got a data as None')
+                    valid = None
+                else:
+                    valid, data = self._verify_recv_checksum(crc_mode, data)
+
+                # valid data, append chunk
+                if valid:
+                    retrans = retry + 1
+                    if sequence == 0 and not md5_received:
+                        md5_received = True
+                        if md5.encode() == data[1 + is_stx: 33 + is_stx]:
+                            self.putc(CAN)
+                            self.putc(CAN)
+                            self.putc(CAN)
+                            while self.getc(1, timeout):
+                                pass
+                            return 0
+                    else:
+                        income_size += len(data) - 1 - is_stx
+                        data_len = data[0] << 8 | data[1] if is_stx else data[0]
+                        stream.write(data[1 + is_stx: (data_len + 1 + is_stx)])
+                        success_count = success_count + 1
+                        if callable(callback):
+                            callback(packet_size, success_count, error_count)
+                    self.putc(ACK)
+                    sequence = (sequence + 1) % 0x100
+                    # get next start-of-header byte
+                    char = self.getc(1, timeout)
+                    continue
+
+            # something went wrong, request retransmission
+            self.log.warn('recv error: purge, requesting retransmission (NAK)')
+            while True:
+                if self.getc(1, timeout) == None:
+                    break
+            retrans = retrans - 1
+            if retrans <= 0:
+                self.log.error('Download error: too many retry error!')
+                self.abort_old()
+                return None
+            # get next start-of-header byte
+            self.putc(NAK)
+            char = self.getc(1, timeout)
+            continue
+
     def send(self, stream, md5, retry=16, timeout=5, quiet=False, callback=None):
         td = float()
         lastseq = 0
@@ -430,6 +690,203 @@ class XMODEM(object):
                     self.log.info('Info: Controller receive data timeout!')
                     self.FileRcvState = FileTransState.WAIT_MD5
                     return None
+
+    def send_old(self, stream, md5, retry=16, timeout=5, quiet=False, callback=None):
+        '''
+        Send a stream via the XMODEM protocol.
+
+            >>> stream = open('/etc/issue', 'rb')
+            >>> print(modem.send(stream))
+            True
+
+        Returns ``True`` upon successful transmission or ``False`` in case of
+        failure or None incase of canceled.
+
+        :param stream: The stream object to send data from.
+        :type stream: stream (file, etc.)
+        :param retry: The maximum number of times to try to resend a failed
+                      packet before failing.
+        :type retry: int
+        :param timeout: The number of seconds to wait for a response before
+                        timing out.
+        :type timeout: int
+        :param quiet: If True, write transfer information to stderr.
+        :type quiet: bool
+        :param callback: Reference to a callback function that has the
+                         following signature.  This is useful for
+                         getting status updates while a xmodem
+                         transfer is underway.
+                         Expected callback signature:
+                         def callback(total_packets, success_count, error_count)
+        :type callback: callable
+        '''
+
+        # initialize protocol
+        try:
+            packet_size = dict(
+                USBMode=128,
+                wifiMode=8192,
+            )[self.mode]
+        except KeyError:
+            raise ValueError("Invalid mode specified: {self.mode!r}"
+                             .format(self=self))
+
+        is_stx = 1 if packet_size > 255 else 0
+
+        self.log.debug('Begin start sequence, packet_size=%d', packet_size)
+        error_count = 0
+        crc_mode = 0
+        cancel = 0
+        while True:
+            char = self.getc(1)
+            if char:
+                if char == NAK:
+                    self.log.debug('standard checksum requested (NAK).')
+                    crc_mode = 0
+                    break
+                elif char == CRC:
+                    self.log.debug('16-bit CRC requested (CRC).')
+                    crc_mode = 1
+                    break
+                elif char == CAN:
+                    if not quiet:
+                        print('received CAN', file=sys.stderr)
+                    if cancel:
+                        self.log.info('Transmission canceled: received 2xCAN '
+                                      'at start-sequence')
+                        return None
+                    else:
+                        self.log.debug('cancellation at start sequence.')
+                        cancel = 1
+                elif char == EOT:
+                    self.log.info('Transmission canceled: received EOT '
+                                  'at start-sequence')
+                    return False
+                else:
+                    self.log.error('send error: expected NAK, CRC, EOT or CAN; '
+                                   'got %r', char)
+
+            error_count += 1
+            if error_count > retry:
+                self.log.info('send error: error_count reached %d, '
+                              'aborting.', retry)
+                self.abort_old(timeout=timeout)
+                return False
+
+        # send data
+        error_count = 0
+        success_count = 0
+        total_packets = 0
+        sequence = 0  # 0 for md5 upload
+        md5_sent = False
+
+        while True:
+            if self.canceled:
+                self.putc(CAN)
+                self.putc(CAN)
+                self.putc(CAN)
+                while self.getc(1, timeout):
+                    pass
+                self.log.info('Transmission canceled by user.')
+                self.canceled = False
+                return None
+
+            data = []
+            if not md5_sent and sequence == 0:
+                data = md5.encode()
+                md5_sent = True
+            else:
+                data = stream.read(packet_size)
+                total_packets += 1
+            if not data:
+                # end of stream
+                self.log.debug('send: at EOF')
+                break
+
+            header = self._make_send_header(packet_size, sequence)
+            if is_stx == 0:
+                data = b''.join([bytes([len(data) & 0xff]), data.ljust(packet_size, self.pad)])
+            else:
+                data = b''.join([bytes([len(data) >> 8, len(data) & 0xff]), data.ljust(packet_size, self.pad)])
+            checksum = self._make_send_checksum(crc_mode, data)
+
+            # emit packet
+            self.putc(header + data + checksum)
+            while True:
+                self.log.debug('send: block %d', sequence)
+                char = self.getc(1, timeout)
+                if char == ACK:
+                    success_count += 1
+                    if callable(callback):
+                        callback(packet_size, total_packets, success_count, error_count)
+                    error_count = 0
+                    break
+                elif char == CAN:
+                    if cancel:
+                        self.log.info('Transmission canceled: received 2xCAN.')
+                        return False
+                    else:
+                        self.log.debug('Cancellation at Transmission.')
+                        cancel = 1
+                elif char == NAK:
+                    self.putc(header + data + checksum)
+                    self.log.debug('Received NAK. retry ...')
+
+                self.log.info('send error: expected ACK; got %r for block %d',
+                              char, sequence)
+                error_count += 1
+                if callable(callback):
+                    callback(packet_size, total_packets, success_count, error_count)
+                if error_count > retry:
+                    # excessive amounts of retransmissions requested,
+                    # abort transfer
+                    self.log.error('send error: NAK received %d times, '
+                                   'aborting.', error_count)
+                    self.abort_old(timeout=timeout)
+                    return False
+
+            # keep track of sequence
+            sequence = (sequence + 1) % 0x100
+
+        while True:
+            self.log.debug('sending EOT, awaiting ACK')
+            # end of transmission
+            self.putc(EOT)
+
+            # An ACK should be returned
+            char = self.getc(1, timeout)
+            if char == ACK:
+                break
+            else:
+                self.log.error('send error: expected ACK; got %r', char)
+                error_count += 1
+                if error_count > retry:
+                    self.log.warn('EOT was not ACKd, aborting transfer')
+                    self.abort_old(timeout=timeout)
+                    return False
+
+        self.log.info('Transmission successful (ACK received).')
+        return True
+
+    def _make_send_header(self, packet_size, sequence):
+        assert packet_size in (128, 8192), packet_size
+        _bytes = []
+        if packet_size == 128:
+            _bytes.append(ord(SOH))
+        elif packet_size == 8192:
+            _bytes.append(ord(STX))
+        _bytes.extend([sequence, 0xff - sequence])
+        return bytearray(_bytes)
+
+    def _make_send_checksum(self, crc_mode, data):
+        _bytes = []
+        if crc_mode:
+            crc = self.calc_crc(data)
+            _bytes.extend([crc >> 8, crc & 0xff])
+        else:
+            crc = self.calc_checksum(data)
+            _bytes.append(crc)
+        return bytearray(_bytes)
 
     def _verify_recv_checksum(self, crc_mode, data):
         if crc_mode:
@@ -519,6 +976,7 @@ def _send(mode='USBMode', filename=None, timeout=30):
 
     xmodem = XMODEM(_getc, _putc, mode)
     return xmodem.send(si)
+
 
 
 def run():
