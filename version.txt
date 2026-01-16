@@ -1,6 +1,11 @@
 Notice: 
 To let the Carvera work perfectly, please make sure both your controller software and firmware are up to date. For controller software, just download the according version of the package and reinstall.
 
+​​[0.9.14]​​
+1.Bug fixing: Resolved the issue where the tool could not be changed to Laser or Other Tools on non-English interfaces.
+2.Optimizing: Compatible with and supports firmware version 1.0.3 and earlier.
+3.Optimizing: Enhanced the display of the current version of Controller and firmware on the Update page.
+
 [0.9.13]
 Important Notes
 The firmware version v1.0.5 requires v0.9.13 Controller or higher.
