@@ -735,7 +735,7 @@
         tooltip_position: 'right'  # 在按钮右侧显示
         values: 'Probe', 'Tool: 1', 'Tool: 2', 'Tool: 3', 'Tool: 4', 'Tool: 5', 'Tool: 6'
         on_text:
-            if self.text != tr._("Change...") and self.text != 'Other Tool': app.root.controller.changeToolCommand(self.text[-1])
+            if self.text != tr._("Change...") and self.text != 'Other Tool': app.root.controller.changeToolCommand(self.text)
             if self.text == 'Other Tool': app.root.change_tool_popup.open()
             if self.text != tr._("Change..."): self.text = tr._('Change...')
             root.select('Third Item')
@@ -767,7 +767,7 @@
         tooltip_position: 'right'  # 在按钮右侧显示
         values: 'Empty', 'Probe', 'Tool: 1', 'Tool: 2', 'Tool: 3', 'Tool: 4', 'Tool: 5', 'Tool: 6'
         on_text:
-            if self.text != tr._("Set...") and self.text != 'Other Tool': app.root.controller.setToolCommand(self.text[-1])
+            if self.text != tr._("Set...") and self.text != 'Other Tool': app.root.controller.setToolCommand(self.text)
             if self.text == 'Other Tool': app.root.set_tool_popup.open()
             if self.text != tr._("Set..."): self.text = tr._('Set...')
             root.select('Third Item')
