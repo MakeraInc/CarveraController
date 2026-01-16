@@ -54,7 +54,7 @@ import datetime
 import threading
 import logging
 
-CTL_VERSION = '0.9.13'
+CTL_VERSION = '0.9.14'
 FW_UPD_ADDRESS = 'https://raw.githubusercontent.com/MakeraInc/CarveraFirmware/main/version.txt'
 CTL_UPD_ADDRESS = 'https://raw.githubusercontent.com/MakeraInc/CarveraController/main/version.txt'
 DOWNLOAD_ADDRESS = 'https://www.makera.com/pages/software'
@@ -1795,7 +1795,8 @@ class Makera(RelativeLayout):
     fw_version_checked = False
     update_checked = False
     echosended = False
-    echosending = False
+    oldfirmware = False
+    versionjudge = 0
 
     factorycode = ''
     probeAddr = ''
@@ -1970,6 +1971,7 @@ class Makera(RelativeLayout):
         self.upgrade_popup.cbx_check_at_startup.active = self.show_update
         if self.show_update:
             self.check_for_updates_get()
+        self.upgrade_popup.ctl_version_txt.text = tr._(' Current version: v') + self.ctl_version_old
 
         # blink timer
         Clock.schedule_interval(self.blink_state, 0.5)
@@ -2555,6 +2557,7 @@ class Makera(RelativeLayout):
                         if remote_version != None:
                             self.fw_version_old = remote_version[0].split('=')[1]
                             CNC.vars["version"] = self.fw_version_old
+                            self.upgrade_popup.fw_version_txt.text = tr._(' Current version: v') + self.fw_version_old
                             if self.fw_version_new != '':
                                 self.check_fw_version()
 
@@ -2757,7 +2760,7 @@ class Makera(RelativeLayout):
         elif CNC.vars['target_tool'] == 8888:
             target_tool = 'Laser'
         self.toolconfirm_popup.lb_title.text = tr._('Changing Tool')
-        self.toolconfirm_popup.lb_content.text = tr._('Please change to tool: ') + '%s\n' % (target_tool) + tr._(
+        self.toolconfirm_popup.lb_content.text = tr._('Please change to tool: ') + '%s\n' % tr._(target_tool) + tr._(
             'Then press \' Confirm \' or main button to proceed')
         self.toolconfirm_popup.cancel = None
         self.toolconfirm_popup.confirm = partial(self.changeTool)
@@ -2952,8 +2955,12 @@ class Makera(RelativeLayout):
             if os.path.exists(tmp_filename):
                 md5 = Utils.md5(tmp_filename)
             self.controller.downloadCommand(self.downloading_file)
-            self.controller.pauseStream(0.0)
-            download_result = self.controller.stream.download(tmp_filename, md5, self.downloadCallback)
+            if self.oldfirmware == False:
+                self.controller.pauseStream(0.0)
+                download_result = self.controller.stream.download(tmp_filename, md5, self.downloadCallback)
+            else:
+                self.controller.pauseStream(0.2)
+                download_result = self.controller.stream.download(tmp_filename, md5, self.downloadCallback_old)
         except:
             print(sys.exc_info()[1])
             self.controller.resumeStream()
@@ -3061,6 +3068,11 @@ class Makera(RelativeLayout):
     # -----------------------------------------------------------------------
     def downloadCallback(self, seq_rev, totalpackets):
         Clock.schedule_once(partial(self.progressUpdate, seq_rev * 100.0 / totalpackets,
+                                    tr._('Downloading') + ' \n%s' % self.downloading_file, False), 0)
+
+    def downloadCallback_old(self, packet_size, success_count, error_count):
+        packets = self.downloading_size / packet_size + (1 if self.downloading_size % packet_size > 0 else 0)
+        Clock.schedule_once(partial(self.progressUpdate, success_count * 100.0 / packets,
                                     tr._('Downloading') + ' \n%s' % self.downloading_file, False), 0)
 
     # -----------------------------------------------------------------------
@@ -3391,7 +3403,8 @@ class Makera(RelativeLayout):
             #md5 = Utils.md5(self.uploading_file)
             md5 = Utils.md5(displayname)
             self.controller.uploadCommand(os.path.normpath(remotename))
-            time.sleep(0.2)
+            if self.oldfirmware == False:
+                time.sleep(0.2)
             upload_result = self.controller.stream.upload(self.uploading_file, md5, self.uploadCallback)
         except:
             self.controller.log.put((Controller.MSG_ERROR, str(sys.exc_info()[1])))
@@ -3467,7 +3480,7 @@ class Makera(RelativeLayout):
                 os.remove(self.uploading_file)
                 self.decomptime = time.time()
                 Clock.schedule_once(partial(self.progressStart, tr._('Decompressing') + '\n%s' % displayname, False), 0.5)
-
+        self.qlzfilename = None
         self.controller.sendNUM = 0
 
     # -----------------------------------------------------------------------
@@ -3757,7 +3770,8 @@ class Makera(RelativeLayout):
                     self.fw_version_checked = False
                     self.update_checked = False
                     self.echosended = False
-                    self.echosending = False
+                    self.oldfirmware = False
+                    self.versionjudge = 0
                     app.playing = False
                     CNC.vars["playedlines"] = 0
                     self.status_drop_down.btn_last_connect.disabled = True
@@ -3788,20 +3802,30 @@ class Makera(RelativeLayout):
                 else:
                     self.status_drop_down.btn_unlock.text = tr._('Unlock')
             # send echo command to Eliminate abnormal characters in cache
-            if not app.playing and not self.echosended and not self.echosending:
+            if not app.playing and not self.echosended:
                 try:
                     if self.controller.stream:
-                        self.echosending = True
-                        self.controller.stream.send(b"echo echo\n")
-
-                        echo = self.controller.stream.getc(10)
-                        if echo == b'echo: echo':
-                            self.message_popup.lb_content.text = tr._('Firmware version mismatch! \nPlease use a Controller with version V0.9.11 or earlier \nto upgrade the firmware to V1.0.4.')
-                            self.message_popup.btn_ok.disabled = False
-                            self.message_popup.open(self)
-                            return
-                        else:
-                            self.echosended = True
+                        while self.controller.stream.getc(1):
+                            pass
+                    for _ in range(3):  # 执行3遍
+                        if self.controller.stream:
+                            self.controller.stream.send(b"echo echo\n")
+                            time.sleep(0.1)
+                            echo = self.controller.stream.getc(10)
+                            if echo is not None:
+                                if b'echo' in echo:
+                                    #self.message_popup.lb_content.text = tr._('Firmware version mismatch! \nPlease use a Controller with version V0.9.11 or earlier \nto upgrade the firmware to V1.0.4.')
+                                    #self.message_popup.btn_ok.disabled = False
+                                    #self.message_popup.open(self)
+                                    #return
+                                    self.oldfirmware = True
+                                    self.echosended = True
+                                    break
+                            else:
+                                self.versionjudge = self.versionjudge + 1
+                                if self.versionjudge > 2:
+                                    self.oldfirmware = False
+                                    self.echosended = True
                 except:
                     print(sys.exc_info()[1])
             # load config, only one time per connection
